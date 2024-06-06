@@ -106,3 +106,11 @@ sync_target: "{{ hostvars['pihole-1'].ansible_host }}"
 For syncing, `rsync` is used which will only transfer files if they contain changes.  
 Changes to `gravity.db` will trigger a docker container restart to pick up the changes.  
 Changes to DNS & CNAME records get picked up on the fly.
+
+# My customizations
+
+This repo is slightly tweaked to contain my own home setup.
+
+- Inventory is encrypted with ansible vault. For all the example `ansible-playbook` commands above, you have to add `--ask-vault-pass`
+- sync also synchronizes a dnsmasq file called `02-cluster.vert-wildcard.conf`, which configures the wildcard domain for my kubernetes cluster
+- Fix for an [issue with missing capabilities](https://github.com/shaderecker/ansible-pihole/issues/16)
