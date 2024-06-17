@@ -1,33 +1,40 @@
 all:
   hosts:
     pihole-1:
-      ansible_host: 192.168.178.45
+      ansible_host: 10.10.10.41
       priority: 101
     pihole-2:
-      ansible_host: 192.168.178.46
+      ansible_host: 10.10.10.42
       priority: 100
   vars:
-    ansible_user: pi
+    ansible_user: ohthehugemanatee
     ansible_password: raspberry # only used on first run
     ansible_python_interpreter: /usr/bin/python3
-    github_user_for_ssh_key: shaderecker
+    github_user_for_ssh_key: ohthehugemanatee
     timezone: "Europe/Berlin"
     static_dns: "1.1.1.1"
     pihole_image: "pihole/pihole:2024.03.2"
     pihole_ftl_max_db_days: "180"
-    pihole_webpassword: Intranet # example value, change it and better use ansible-vault
+    pihole_webpassword: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          37316433663733336237313561396665336362666566373232323161323763336538313331316532
+          3832373434643137356661616137333430383538373138620a393538386464326134323031373965
+          62643838643331353336303162303334323533653538333636656363626632376261366365323931
+          3139366336623239350a653138313633666165303761346535336438346431663265633734643738
+          3164
     pihole_dns: "1.1.1.1;2606:4700:4700::1111"
-    pihole_rev_server: "true"
-    pihole_rev_server_domain: "fritz.box"
-    pihole_rev_server_target: "192.168.178.1"
-    pihole_rev_server_cidr: "192.168.178.0/24"
+    pihole_rev_server: "false"
+    pihole_rev_server_domain: "vert"
+    pihole_rev_server_target: "10.10.10.1"
+    pihole_rev_server_cidr: "10.10.10.1/24"
     pihole_ha_mode: yes
-    pihole_vip_ipv4: "192.168.178.10/24"
+    pihole_vip_ipv4: "10.10.10.40/24"
     pihole_vip_ipv6: "fd00::10/64"
     sync_target: "{{ pihole_vip_ipv4.split('/')[0] }}"
-    dhcp_server: "false" # If enabled, consider a shorter sync interval to catch dhcp leases (see README)
-    dhcp_start: "192.168.178.100"
-    dhcp_end: "192.168.178.250" 
-    dhcp_router: "192.168.178.1"
-    dhcp_domain: "local"
-    dhcp_lease_time: "24" # In hours
+    sync_target: "{{ hostvars['pihole-1'].ansible_host }}"
+    dhcp_server: "true"
+    dhcp_start: "10.10.10.100"
+    dhcp_end: "10.10.10.250" 
+    dhcp_router: "10.10.10.1"
+    dhcp_domain: "vert"
+    dhcp_lease_time: "24"
